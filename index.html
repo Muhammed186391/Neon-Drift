@@ -19,6 +19,20 @@
         .admin-section h3 { margin: 0 0 10px 0; color: #cc0000; font-size: 14px; }
         .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .shop-item { border: 1px solid #eee; padding: 10px; border-radius: 10px; text-align: center; background: #fafafa; }
+
+        /* MOBIL TUSLAR */
+        .mobile-controls {
+            position: absolute; bottom: 30px; left: 0; width: 100%;
+            display: flex; justify-content: space-around; pointer-events: none; z-index: 1500;
+        }
+        .joy-btn {
+            width: 80px; height: 80px; background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.5); border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 30px; color: white; user-select: none; pointer-events: auto;
+            backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+        }
+        .joy-btn:active { background: rgba(255,255,255,0.5); transform: scale(0.9); }
     </style>
 </head>
 <body>
@@ -98,6 +112,10 @@
             <b>OYUNCU:</b> <span id="ui-user">?</span><br>
             <b>SKOR:</b> <span id="score-val">0</span><br>
             <b>ENERJİ:</b> <span id="bank-val">0</span>
+        </div>
+        <div class="mobile-controls">
+            <div class="joy-btn" id="btn-left">◀</div>
+            <div class="joy-btn" id="btn-right">▶</div>
         </div>
     </div>
 
@@ -210,8 +228,26 @@
             scene.add(new THREE.DirectionalLight(0xffffff, 1.2));
             scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
+            // KONTROLLER (KLAVYE + MOBIL)
             window.addEventListener('keydown', (e) => { if(e.key==='a'||e.key==='ArrowLeft') keys.a=true; if(e.key==='d'||e.key==='ArrowRight') keys.d=true; });
             window.addEventListener('keyup', (e) => { if(e.key==='a'||e.key==='ArrowLeft') keys.a=false; if(e.key==='d'||e.key==='ArrowRight') keys.d=false; });
+
+            // MOBIL DOKUNMATIK DINLEYICILER
+            const btnLeft = document.getElementById('btn-left');
+            const btnRight = document.getElementById('btn-right');
+
+            const setLeft = (val) => keys.a = val;
+            const setRight = (val) => keys.d = val;
+
+            btnLeft.addEventListener('touchstart', (e) => { e.preventDefault(); setLeft(true); });
+            btnLeft.addEventListener('touchend', (e) => { e.preventDefault(); setLeft(false); });
+            btnLeft.addEventListener('mousedown', () => setLeft(true));
+            btnLeft.addEventListener('mouseup', () => setLeft(false));
+
+            btnRight.addEventListener('touchstart', (e) => { e.preventDefault(); setRight(true); });
+            btnRight.addEventListener('touchend', (e) => { e.preventDefault(); setRight(false); });
+            btnRight.addEventListener('mousedown', () => setRight(true));
+            btnRight.addEventListener('mouseup', () => setRight(false));
 
             if(currentUser) {
                 document.getElementById('auth-screen').style.display = 'none';
